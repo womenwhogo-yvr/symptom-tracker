@@ -1,7 +1,9 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
+	"log"
 )
 
 // Home : Handler for "/" route
@@ -13,7 +15,30 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	w.Write([]byte("Hello from Symptom Tracker"))
+
+	// Initialize slice containing paths to template files
+	files := []string{
+		"./ui/html/layout.html",
+	}
+
+	// Read and store files in template set
+	// If error, return response with standard message & status code
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	// use ExecuteTemplate to use "layout" template and write content to
+	// http.ResponseWriter
+	// 3rd parameter represents any dynamic data to be passed
+	err = ts.ExecuteTemplate(w, "layout", nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
 }
 
 // ShowSymptoms : Handler for "/symptoms" route

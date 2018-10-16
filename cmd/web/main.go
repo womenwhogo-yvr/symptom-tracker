@@ -7,10 +7,13 @@ import (
 )
 
 func main() {
-	// define command line flags for configuration
+	// Define command line flags for configuration
 	addr := flag.String("addr", ":3030", "HTTP network address")
 	htmlDir := flag.String("html-dir", "./ui/html", "Path to HTML templates")
-	// staticDir := flag.String("static-dir", "./ui/static/", "Path to static assets")
+	staticDir := flag.String("static-dir", "./ui/static/", "Path to static assets")
+
+	// Parse flags and assigns in the above variables
+	flag.Parse()
 
 	app := &App{
 		HTMLDir: *htmlDir,
@@ -22,6 +25,12 @@ func main() {
 	// Use the mux.HandleFunc() method to register function and handle URL pattern
 	mux.HandleFunc("/", app.Home)
 	mux.HandleFunc("/symptoms", app.ShowSymptoms)
+
+	// create fileserver for static files
+	// filepath should be relative to project directory
+	fileServer := http.FileServer(http.Dir(*staticDir))
+
+	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	// Use the http.ListenAndServe() function to start a new web server. We pass in
 	// two parameters: the TCP network address to listen on (in this case ":3030")
