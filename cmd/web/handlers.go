@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"net/http"
-	"log"
 )
 
 // Home : Handler for "/" route
@@ -12,7 +11,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	// If it doesn't, use the http.NotFound() function to send a 404 Not Found response.
 	// Importantly, we then return from the function so that the subsequent code is not executed.
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		app.NotFound(w)
 		return
 	}
 
@@ -25,8 +24,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	// If error, return response with standard message & status code
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		app.ServerError(w, err)
 		return
 	}
 
@@ -35,8 +33,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	// 3rd parameter represents any dynamic data to be passed
 	err = ts.ExecuteTemplate(w, "layout", nil)
 	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		app.ServerError(w, err)
 		return
 	}
 }
