@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 )
 
@@ -15,27 +14,8 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Initialize slice containing paths to template files
-	files := []string{
-		"./ui/html/layout.html",
-	}
-
-	// Read and store files in template set
-	// If error, return response with standard message & status code
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.ServerError(w, err)
-		return
-	}
-
-	// use ExecuteTemplate to use "layout" template and write content to
-	// http.ResponseWriter
-	// 3rd parameter represents any dynamic data to be passed
-	err = ts.ExecuteTemplate(w, "layout", nil)
-	if err != nil {
-		app.ServerError(w, err)
-		return
-	}
+	// Combines HTML templates and takes any dynamic data if available
+	app.RenderHTML(w)
 }
 
 // ShowSymptoms : Handler for "/symptoms" route
