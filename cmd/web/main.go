@@ -17,6 +17,7 @@ func main() {
 
 	app := &App{
 		HTMLDir: *htmlDir,
+		StaticDir: *staticDir,
 	}
 
 	// Use the http.NewServeMux() function to initialize a new serve mux (router)
@@ -28,7 +29,7 @@ func main() {
 
 	// create fileserver for static files
 	// filepath should be relative to project directory
-	fileServer := http.FileServer(http.Dir(*staticDir))
+	fileServer := http.FileServer(http.Dir(app.StaticDir))
 
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
