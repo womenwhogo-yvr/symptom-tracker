@@ -1,21 +1,33 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"log"
 	"net/http"
+	"symptom-tracker/pkg/models"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 	// Define command line flags for configuration
 	addr := flag.String("addr", ":3030", "HTTP network address")
+	dsn := flag.String("dsn", "dbname=symptom-tracker sslmode=disable", "Postgres data source name")
 	htmlDir := flag.String("html-dir", "./ui/html", "Path to HTML templates")
 	staticDir := flag.String("static-dir", "./ui/static/", "Path to static assets")
 
 	// Parse flags and assigns in the above variables
 	flag.Parse()
 
+	// Open a connection to the db
+	db := connect(*dsn)
+
+	// Defer call ensures connection pool closes before the main() function exits
+	defer db.Close()
+
 	app := &App{
+		Database: &models.Database{db},
 		HTMLDir: *htmlDir,
 		StaticDir: *staticDir,
 	}
@@ -28,4 +40,18 @@ func main() {
 	err := http.ListenAndServe(*addr, app.Routes())
 
 	log.Fatal(err)
+}
+
+// connect wraps sql.Open and returns a sql.DB connection pool
+func connect(dsn string) *sql.DB {
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
+	return db
 }
