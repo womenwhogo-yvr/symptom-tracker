@@ -10,8 +10,9 @@ func (app *App) Routes() *http.ServeMux {
 
 		// Use the mux.HandleFunc() method to register function and handle URL pattern
 		mux.HandleFunc("/", app.Home)
-		mux.HandleFunc("/symptoms", app.ShowSymptoms)
-	
+		mux.HandleFunc("/entry", app.ShowEntry)
+		mux.HandleFunc("/entry/add", app.AddEntry)
+
 		// create fileserver for static files
 		// filepath should be relative to project directory
 		fileServer := http.FileServer(http.Dir(app.StaticDir))
