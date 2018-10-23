@@ -10,6 +10,12 @@ go get github.com/lib/pq
 ```
 
 ## Using the App
+### In Dev Mode
+To run the app:
+```
+go run cmd/web/*
+```
+
 ### Command Line Flags
 The following command line flags are available for setting configurations at runtime:
 - addr
