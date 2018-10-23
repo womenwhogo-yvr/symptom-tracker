@@ -42,7 +42,7 @@ func main() {
 	log.Fatal(err)
 }
 
-// connect wraps sql.Open and returns a sql.DB connection pool
+// connect() wraps sql.Open and returns a sql.DB connection pool
 func connect(dsn string) *sql.DB {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {

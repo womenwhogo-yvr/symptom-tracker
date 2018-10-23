@@ -39,6 +39,7 @@ func (app *App) ShowEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprint(w, entry)
+	// Just a helper for checking that slice of symptoms is there
 	for _, p := range symptoms {
     fmt.Printf("%+v\n", p)
 	}
