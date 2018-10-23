@@ -1,11 +1,19 @@
 # Symptom Tracker
 
-This web app helps you track your health symptoms.
+A simple mobile app to help you track your health symptoms.
+
+## Setup
+### Postgres
+Make sure you install the [Postgres driver](https://github.com/lib/pq):
+```
+go get github.com/lib/pq
+```
 
 ## Using the App
 ### Command Line Flags
 The following command line flags are available for setting configurations at runtime:
 - addr
+- dsn (data source name for psql)
 - html-dir
 - static-dir
 
